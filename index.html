@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Russia Trails | Регистрация</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Leaflet CSS для карты -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/>
-    
+
     <!-- Leaflet Fullscreen -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css" />
-    
+
     <!-- Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
+
     <style>
         * {
             margin: 0;
@@ -48,7 +48,7 @@
 
         .welcome-section {
             flex: 1;
-            background: linear-gradient(rgba(26, 41, 128, 0.8), rgba(38, 208, 206, 0.8)), 
+            background: linear-gradient(rgba(26, 41, 128, 0.8), rgba(38, 208, 206, 0.8)),
                         url('https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
             background-size: cover;
             background-position: center;
@@ -252,29 +252,29 @@
                 max-width: 95%;
                 margin: 10px auto;
             }
-            
+
             .welcome-section {
                 padding: 30px 25px;
             }
-            
+
             .form-section {
                 padding: 30px 25px;
             }
-            
+
             .welcome-section h1 {
                 font-size: 26px;
             }
-            
+
             .mobile-warning {
                 display: block;
             }
-            
+
             .map-controls {
                 top: 5px;
                 right: 5px;
                 padding: 10px;
             }
-            
+
             .map-btn {
                 padding: 8px 12px;
                 font-size: 14px;
@@ -291,11 +291,11 @@
         </div>
         <div class="form-section">
             <div class="logo"><i class="fas fa-map-marked-alt"></i> RUSSIA TRAILS</div>
-            
+
             <div class="mobile-warning">
                 <i class="fas fa-mobile-alt"></i> Для лучшего опыта используйте полную версию на компьютере
             </div>
-            
+
             <!-- Форма входа -->
             <div id="login-form" class="form-container active">
                 <h2 class="form-title">Вход в аккаунт</h2>
@@ -318,7 +318,7 @@
                     Нет аккаунта? <a id="to-register">Зарегистрироваться</a>
                 </div>
             </div>
-            
+
             <!-- Форма регистрации -->
             <div id="register-form" class="form-container">
                 <h2 class="form-title">Регистрация</h2>
@@ -376,16 +376,16 @@
     <script>
         // ==================== КОНФИГУРАЦИЯ SUPABASE ====================
         // ⚠️ ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ С КОНСОЛИ SUPABASE!
-        const supabaseUrl = 'https://ваш-проект.supabase.co';
-        const supabaseKey = 'ваш-public-anon-key';
+        const supabaseUrl = 'https://jlykbogtjybqysjyjgjh.supabase.co';
+        const supabaseKey = 'sb_publishable_-4KXIY05Dsd95F1RirHv3g_RiNBrdGo';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-        
+
         // Глобальные переменные для карты
         let currentMap = null;
         let routePoints = [];
         let routeMarkers = [];
         let routeLine = null;
-        
+
         // ==================== ПЕРЕКЛЮЧЕНИЕ ФОРМ ====================
         document.getElementById('to-register').addEventListener('click', function(e) {
             e.preventDefault();
@@ -406,17 +406,17 @@
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             const confirm = document.getElementById('reg-confirm').value;
-            
+
             if (!name || !email || !password || !confirm) {
                 alert('Заполните все поля!');
                 return;
             }
-            
+
             if (password !== confirm) {
                 alert('Пароли не совпадают!');
                 return;
             }
-            
+
             try {
                 const { data, error } = await supabase.auth.signUp({
                     email: email,
@@ -427,13 +427,13 @@
                         }
                     }
                 });
-                
+
                 if (error) throw error;
-                
+
                 alert(`Регистрация успешна! Добро пожаловать, ${name}! Проверьте почту для подтверждения.`);
                 console.log('Пользователь зарегистрирован:', data.user);
                 showMap();
-                
+
             } catch (error) {
                 alert('Ошибка регистрации: ' + error.message);
                 console.error('Ошибка регистрации:', error);
@@ -445,24 +445,24 @@
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            
+
             if (!email || !password) {
                 alert('Заполните все поля!');
                 return;
             }
-            
+
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
-                
+
                 if (error) throw error;
-                
+
                 alert('Вход выполнен успешно! Добро пожаловать!');
                 console.log('Пользователь вошёл:', data.user);
                 showMap();
-                
+
             } catch (error) {
                 alert('Ошибка входа: ' + error.message);
                 console.error('Ошибка входа:', error);
@@ -475,31 +475,31 @@
                 document.getElementById('start-container').style.display = 'none';
                 const mapContainer = document.getElementById('map-container');
                 mapContainer.style.display = 'block';
-                
+
                 // Создаем карту (центр - Москва, масштаб 5)
                 currentMap = L.map('map').setView([55.7558, 37.6176], 5);
-                
+
                 // Добавляем OpenStreetMap слой
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap',
                     maxZoom: 19
                 }).addTo(currentMap);
-                
+
                 // Добавляем полноэкранный режим
                 currentMap.addControl(new L.Control.Fullscreen());
-                
+
                 // Обработчик клика по карте
                 currentMap.on('click', function(e) {
                     addMarkerAt(e.latlng);
                 });
-                
+
                 // Сбрасываем старые точки
                 routePoints = [];
                 routeMarkers = [];
                 routeLine = null;
-                
+
                 console.log("Карта OpenStreetMap загружена");
-                
+
             } catch (error) {
                 console.error("Ошибка карты:", error);
                 alert("Ошибка загрузки карты");
@@ -509,14 +509,14 @@
         // ==================== РАБОТА С МАРШРУТАМИ ====================
         function addMarkerAt(latlng) {
             if (!currentMap) return;
-            
+
             const marker = L.marker(latlng).addTo(currentMap)
                 .bindPopup(`Точка ${routePoints.length + 1}<br>Широта: ${latlng.lat.toFixed(4)}<br>Долгота: ${latlng.lng.toFixed(4)}`)
                 .openPopup();
-            
+
             routePoints.push({ lat: latlng.lat, lng: latlng.lng });
             routeMarkers.push(marker);
-            
+
             // Рисуем линию между точками
             if (routePoints.length > 1) {
                 if (routeLine) {
@@ -541,17 +541,17 @@
                 alert("Добавьте точки на карту!");
                 return;
             }
-            
+
             const routeName = prompt("Название маршрута:", `Маршрут ${new Date().toLocaleDateString()}`);
             if (!routeName) return;
-            
+
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
                     alert("Войдите в аккаунт!");
                     return;
                 }
-                
+
                 const { data, error } = await supabase
                     .from('routes')
                     .insert([{
@@ -561,11 +561,11 @@
                         created_at: new Date()
                     }])
                     .select();
-                
+
                 if (error) throw error;
-                
+
                 alert(`Маршрут "${routeName}" сохранен!`);
-                
+
                 // Очищаем карту
                 routePoints = [];
                 routeMarkers.forEach(m => currentMap.removeLayer(m));
@@ -574,7 +574,7 @@
                     currentMap.removeLayer(routeLine);
                     routeLine = null;
                 }
-                
+
             } catch (error) {
                 alert("Ошибка: " + error.message);
             }
@@ -587,29 +587,29 @@
                     alert("Войдите в аккаунт!");
                     return;
                 }
-                
+
                 const { data: routes, error } = await supabase
                     .from('routes')
                     .select('*')
                     .order('created_at', { ascending: false });
-                
+
                 if (error) throw error;
-                
+
                 if (!routes || routes.length === 0) {
                     alert("Нет сохраненных маршрутов");
                     return;
                 }
-                
+
                 let list = "Ваши маршруты:\n\n";
                 routes.forEach((r, i) => {
                     list += `${i+1}. ${r.name}\n   Точек: ${r.points.length}\n   Дата: ${new Date(r.created_at).toLocaleDateString()}\n\n`;
                 });
-                
+
                 const choice = prompt(`${list}\nВведите номер маршрута для просмотра:`);
                 if (choice && routes[choice-1]) {
                     showSavedRoute(routes[choice-1]);
                 }
-                
+
             } catch (error) {
                 alert("Ошибка загрузки: " + error.message);
             }
@@ -624,17 +624,17 @@
                 currentMap.removeLayer(routeLine);
                 routeLine = null;
             }
-            
+
             // Отображаем сохраненный маршрут
             route.points.forEach(point => {
                 addMarkerAt(L.latLng(point.lat, point.lng));
             });
-            
+
             // Центрируем карту
             if (route.points.length > 0) {
                 currentMap.setView([route.points[0].lat, route.points[0].lng], 10);
             }
-            
+
             alert(`Маршрут "${route.name}" загружен!`);
         }
 
@@ -642,7 +642,7 @@
         function goBack() {
             document.getElementById('map-container').style.display = 'none';
             document.getElementById('start-container').style.display = 'flex';
-            
+
             if (currentMap) {
                 currentMap.remove();
                 currentMap = null;
