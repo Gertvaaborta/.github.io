@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russia Trails | Регистрация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(rgba(26, 41, 128, 0.8), rgba(38, 208, 206, 0.8)),
+                        url('https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .welcome-section h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .welcome-section p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px 30px;
+        }
+
+        .logo {
+            color: #1a2980;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #1a2980;
+            outline: none;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .checkbox input {
+            margin-right: 8px;
+            transform: scale(1.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(26, 41, 128, 0.3);
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .switch-form a {
+            color: #1a2980;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        #map-container {
+            display: none;
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .mobile-warning {
+            display: none;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 95%;
+                margin: 10px auto;
+            }
+
+            .welcome-section {
+                padding: 30px 25px;
+            }
+
+            .form-section {
+                padding: 30px 25px;
+            }
+
+            .welcome-section h1 {
+                font-size: 26px;
+            }
+
+            .mobile-warning {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Стартовое окно -->
+    <div id="start-container" class="container">
+        <div class="welcome-section">
+            <h1>Добро пожаловать в Russia Trails</h1>
+            <p>Откройте для себя Россию: её бескрайние просторы, уникальные природные ландшафты и богатое культурное наследие.</p>
+        </div>
+        <div class="form-section">
+            <div class="logo"><i class="fas fa-map-marked-alt"></i> RUSSIA TRAILS</div>
+
+            <div class="mobile-warning">
+                <i class="fas fa-mobile-alt"></i> Для лучшего опыта используйте полную версию на компьютере
+            </div>
+
+            <!-- Форма входа -->
+            <div id="login-form" class="form-container active">
+                <h2 class="form-title">Вход в аккаунт</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="login-email" placeholder="ваш@email.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password"><i class="fas fa-lock"></i> Пароль</label>
+                        <input type="password" id="login-password" placeholder="Введите пароль" required>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Запомнить меня</label>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Войти</button>
+                </form>
+                <div class="switch-form">
+                    Нет аккаунта? <a id="to-register">Зарегистрироваться</a>
+                </div>
+            </div>
+
+            <!-- Форма регистрации -->
+            <div id="register-form" class="form-container">
+                <h2 class="form-title">Регистрация</h2>
+                <form id="registerForm">
+                    <div class="input-group">
+                        <label for="reg-name"><i class="fas fa-user"></i> Имя</label>
+                        <input type="text" id="reg-name" placeholder="Ваше имя" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="reg-email" placeholder="ваш@email.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-password"><i class="fas fa-lock"></i> Пароль</label>
+                        <input type="password" id="reg-password" placeholder="Придумайте пароль" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-confirm"><i class="fas fa-lock"></i> Подтвердите пароль</label>
+                        <input type="password" id="reg-confirm" placeholder="Повторите пароль" required>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Зарегистрироваться</button>
+                </form>
+                <div class="switch-form">
+                    Уже есть аккаунт? <a id="to-login">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Контейнер для карты -->
+    <div id="map-container"></div>
+
+    <script>
+        // Проверяем мобильное устройство
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            console.log("Мобильное устройство обнаружено");
+        }
+
+        // Переключение между формами
+        document.getElementById('to-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('login-form').classList.remove('active');
+            document.getElementById('register-form').classList.add('active');
+        });
+
+        document.getElementById('to-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('register-form').classList.remove('active');
+            document.getElementById('login-form').classList.add('active');
+        });
+
+        // Обработка входа
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                alert('Заполните все поля!');
+                return;
+            }
+
+            // Имитация успешного входа
+            console.log('Вход выполнен:', email);
+            alert('Вход выполнен успешно! Переходим к карте...');
+
+            // Переход к карте
+            showMap();
+        });
+
+        // Обработка регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+
+            if (!name || !email || !password || !confirm) {
+                alert('Заполните все поля!');
+                return;
+            }
+
+            if (password !== confirm) {
+                alert('Пароли не совпадают!');
+                return;
+            }
+
+            // Имитация успешной регистрации
+            console.log('Регистрация:', { name, email });
+            alert('Регистрация успешна! Добро пожаловать, ' + name + '!');
+
+            // Переход к карте
+            showMap();
+        });
+
+        // Функция показа карты
+        function showMap() {
+            try {
+                // Скрываем стартовое окно
+                document.getElementById('start-container').style.display = 'none';
+                // Показываем контейнер карты
+                const mapContainer = document.getElementById('map-container');
+                mapContainer.style.display = 'block';
+
+                // Создаем простую карту с iframe (без HTTPS проблем)
+                mapContainer.innerHTML = `
+                    <div style="width:100%;height:100%;background:#f0f0f0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                        <h2 style="color:#1a2980;margin-bottom:20px;"><i class="fas fa-map-marked-alt"></i> Карта России</h2>
+                        <p style="color:#666;margin-bottom:30px;text-align:center;padding:0 20px;">
+                            Здесь будет интерактивная карта маршрутов России.<br>
+                            Для демонстрации используем изображение.
+                        </p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Russia_%28orthographic_projection%29.svg/400px-Russia_%28orthographic_projection%29.svg.png"
+                             alt="Карта России"
+                             style="width:80%;max-width:300px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                        <div style="margin-top:30px;">
+                            <button onclick="goBack()" style="padding:10px 20px;background:#1a2980;color:white;border:none;border-radius:5px;cursor:pointer;">
+                                <i class="fas fa-arrow-left"></i> Вернуться назад
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Добавляем обработчик для кнопки "Назад"
+                window.goBack = function() {
+                    document.getElementById('start-container').style.display = 'flex';
+                    mapContainer.style.display = 'none';
+                    mapContainer.innerHTML = '';
+                };
+
+            } catch (error) {
+                console.error("Ошибка при отображении карты:", error);
+                alert("Произошла ошибка. Пожалуйста, обновите страницу.");
+            }
+        }
+
+        // Автозаполнение для тестирования
+        window.addEventListener('DOMContentLoaded', function() {
+            // Только для демо - предзаполняем поля
+            setTimeout(function() {
+                document.getElementById('login-email').value = 'demo@example.com';
+                document.getElementById('login-password').value = 'demo123';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
