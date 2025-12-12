@@ -2,660 +2,1170 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russia Trails | Регистрация</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Russia Trails | Путешествия по России</title>
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Leaflet CSS для карты -->
+    
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/>
-
-    <!-- Leaflet Fullscreen -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css" />
-
+    
     <!-- Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(135deg, #1a2980, #26d0ce);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            display: flex;
-            max-width: 1000px;
-            width: 100%;
-            background: white;
-            border-radius: 20px;
+            background: #f8f9fa;
+            height: 100vh;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
-        .welcome-section {
-            flex: 1;
-            background: linear-gradient(rgba(26, 41, 128, 0.8), rgba(38, 208, 206, 0.8)),
-                        url('https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 50px 40px;
+        /* ========== ОСНОВНОЙ КОНТЕЙНЕР ========== */
+        .app-container {
+            width: 100%;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            background: white;
         }
 
-        .welcome-section h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .welcome-section p {
-            font-size: 16px;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
-
-        .form-section {
-            flex: 1;
-            padding: 40px 30px;
+        /* Шапка */
+        .app-header {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            padding: 18px 20px;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
         }
 
         .logo {
-            color: #1a2980;
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .form-container {
-            display: none;
-        }
-
-        .form-container.active {
-            display: block;
-        }
-
-        .form-title {
             font-size: 22px;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .input-group {
-            margin-bottom: 18px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            color: #555;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-            transition: border 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: #1a2980;
-            outline: none;
-        }
-
-        .checkbox {
+            font-weight: 700;
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            font-size: 14px;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .checkbox input {
-            margin-right: 8px;
-            transform: scale(1.1);
+        /* Основной контент */
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
+            background: #f8f9fa;
         }
 
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(to right, #1a2980, #26d0ce);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(26, 41, 128, 0.3);
-        }
-
-        .switch-form {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .switch-form a {
-            color: #1a2980;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .switch-form a:hover {
-            text-decoration: underline;
-        }
-
-        #map-container {
+        /* Секции (скрыты по умолчанию) */
+        .page-section {
             display: none;
-            width: 100%;
-            height: 100vh;
-            position: relative;
+            min-height: 100%;
+            padding-bottom: 80px; /* Отступ для таб-бара */
         }
 
+        .page-section.active {
+            display: block;
+        }
+
+        /* ========== ГЛАВНАЯ (КАРТА) ========== */
         #map {
             width: 100%;
-            height: 100%;
+            height: calc(100vh - 130px);
+            border-radius: 0;
         }
 
         .map-controls {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            bottom: 100px;
+            right: 20px;
             z-index: 1000;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .map-btn {
-            padding: 10px 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
             border: none;
-            border-radius: 6px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #1a2980;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .map-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ========== МАРШРУТЫ ========== */
+        .routes-container {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #1a2980;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .routes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .routes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .route-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .route-card:active {
+            transform: scale(0.98);
+        }
+
+        .route-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .route-info {
+            padding: 20px;
+        }
+
+        .route-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .route-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .route-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .route-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e3f2fd;
+            color: #1a2980;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* ========== СТРАНИЦА МАРШРУТА ========== */
+        .route-detail-page {
+            background: white;
+            min-height: 100%;
+        }
+
+        .route-detail-header {
+            position: relative;
+        }
+
+        .route-detail-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .route-detail-content {
+            padding: 25px 20px;
+        }
+
+        .route-detail-title {
+            font-size: 28px;
+            color: #1a2980;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .route-stats {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a2980;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .section-subtitle {
+            font-size: 20px;
+            color: #333;
+            margin: 25px 0 15px;
+            font-weight: 600;
+        }
+
+        .route-description {
+            color: #555;
+            line-height: 1.6;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .route-points {
+            list-style: none;
+        }
+
+        .route-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 18px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .point-number {
+            width: 30px;
+            height: 30px;
+            background: #1a2980;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .point-text {
+            flex: 1;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+
+        @media (min-width: 768px) {
+            .action-buttons {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .action-btn {
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
         }
 
-        .map-btn:hover {
-            transform: translateY(-2px);
+        .action-btn:active {
+            transform: scale(0.98);
         }
 
-        .btn-add {
-            background: #1a2980;
-            color: white;
-        }
-
-        .btn-save {
-            background: #26d0ce;
-            color: white;
-        }
-
-        .btn-list {
+        .btn-find {
             background: #4CAF50;
             color: white;
         }
 
-        .btn-back {
-            background: #f44336;
+        .btn-start {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
             color: white;
         }
 
-        .mobile-warning {
-            display: none;
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
+        /* ========== ПРОФИЛЬ ========== */
+        .profile-container {
+            padding: 20px;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                max-width: 95%;
-                margin: 10px auto;
-            }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-            .welcome-section {
-                padding: 30px 25px;
-            }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 40px;
+        }
 
-            .form-section {
-                padding: 30px 25px;
-            }
+        .profile-name {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
 
-            .welcome-section h1 {
-                font-size: 26px;
-            }
+        .profile-email {
+            color: #666;
+            font-size: 16px;
+        }
 
-            .mobile-warning {
-                display: block;
-            }
+        .profile-form {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
 
-            .map-controls {
-                top: 5px;
-                right: 5px;
-                padding: 10px;
-            }
+        .form-group {
+            margin-bottom: 25px;
+        }
 
-            .map-btn {
-                padding: 8px 12px;
-                font-size: 14px;
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #fafafa;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: #1a2980;
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 41, 128, 0.1);
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* ========== ТАБ-БАР ========== */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 5px;
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+
+        .tab-item.active {
+            color: #1a2980;
+        }
+
+        .tab-item i {
+            font-size: 22px;
+        }
+
+        .tab-label {
+            font-weight: 500;
+        }
+
+        /* ========== ГРУППЫ ========== */
+        .groups-container {
+            padding: 20px;
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .coming-soon i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        /* ========== АВТОРИЗАЦИЯ ========== */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .auth-modal {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .auth-tab.active {
+            color: #1a2980;
+            border-bottom: 2px solid #1a2980;
+            margin-bottom: -2px;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        /* ========== УТИЛИТЫ ========== */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Оптимизация для очень маленьких экранов */
+        @media (max-width: 360px) {
+            .app-header {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 18px;
+            }
+            
+            .routes-container,
+            .profile-container,
+            .groups-container {
+                padding: 15px;
+            }
+            
+            .route-detail-content {
+                padding: 20px 15px;
+            }
+            
+            .tab-item {
+                font-size: 11px;
+            }
+            
+            .tab-item i {
+                font-size: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Стартовое окно -->
-    <div id="start-container" class="container">
-        <div class="welcome-section">
-            <h1>Добро пожаловать в Russia Trails</h1>
-            <p>Откройте для себя Россию: её бескрайние просторы, уникальные природные ландшафты и богатое культурное наследие.</p>
-        </div>
-        <div class="form-section">
-            <div class="logo"><i class="fas fa-map-marked-alt"></i> RUSSIA TRAILS</div>
-
-            <div class="mobile-warning">
-                <i class="fas fa-mobile-alt"></i> Для лучшего опыта используйте полную версию на компьютере
-            </div>
-
-            <!-- Форма входа -->
-            <div id="login-form" class="form-container active">
-                <h2 class="form-title">Вход в аккаунт</h2>
-                <form id="loginForm">
-                    <div class="input-group">
-                        <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
-                        <input type="email" id="login-email" placeholder="ваш@email.com" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="login-password"><i class="fas fa-lock"></i> Пароль</label>
-                        <input type="password" id="login-password" placeholder="Введите пароль" required>
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="remember">
-                        <label for="remember">Запомнить меня</label>
-                    </div>
-                    <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Войти</button>
-                </form>
-                <div class="switch-form">
-                    Нет аккаунта? <a id="to-register">Зарегистрироваться</a>
-                </div>
-            </div>
-
-            <!-- Форма регистрации -->
-            <div id="register-form" class="form-container">
-                <h2 class="form-title">Регистрация</h2>
-                <form id="registerForm">
-                    <div class="input-group">
-                        <label for="reg-name"><i class="fas fa-user"></i> Имя</label>
-                        <input type="text" id="reg-name" placeholder="Ваше имя" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
-                        <input type="email" id="reg-email" placeholder="ваш@email.com" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="reg-password"><i class="fas fa-lock"></i> Пароль</label>
-                        <input type="password" id="reg-password" placeholder="Придумайте пароль" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="reg-confirm"><i class="fas fa-lock"></i> Подтвердите пароль</label>
-                        <input type="password" id="reg-confirm" placeholder="Повторите пароль" required>
-                    </div>
-                    <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Зарегистрироваться</button>
-                </form>
-                <div class="switch-form">
-                    Уже есть аккаунт? <a id="to-login">Войти</a>
-                </div>
+    <div class="app-container">
+        <!-- Шапка -->
+        <div class="app-header">
+            <div class="logo">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>RUSSIA TRAILS</span>
             </div>
         </div>
-    </div>
 
-    <!-- Контейнер для карты -->
-    <div id="map-container">
-        <div id="map"></div>
-        <div class="map-controls">
-            <button class="map-btn btn-add" onclick="addRoutePoint()">
-                <i class="fas fa-map-marker-alt"></i> Добавить точку
+        <!-- Основной контент -->
+        <div class="app-content">
+            <!-- Главная (Карта) -->
+            <section id="home-page" class="page-section active">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <button class="map-btn" onclick="addMarkerAtCenter()" title="Добавить точку">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </button>
+                    <button class="map-btn" onclick="centerOnUser()" title="Мое местоположение">
+                        <i class="fas fa-location-crosshairs"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Маршруты -->
+            <section id="routes-page" class="page-section">
+                <div class="routes-container">
+                    <h2 class="section-title">Популярные маршруты</h2>
+                    <div class="routes-grid" id="routesGrid">
+                        <!-- Маршруты будут загружены через JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Детальная страница маршрута -->
+            <section id="route-detail-page" class="page-section route-detail-page">
+                <!-- Заполняется через JS -->
+            </section>
+
+            <!-- Группы -->
+            <section id="groups-page" class="page-section">
+                <div class="groups-container">
+                    <h2 class="section-title">Группы</h2>
+                    <div class="coming-soon">
+                        <i class="fas fa-users"></i>
+                        <h3>Скоро здесь будут группы</h3>
+                        <p>Вы сможете находить компанию для совместных путешествий</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Профиль -->
+            <section id="profile-page" class="page-section">
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h2 class="profile-name" id="profileName">Гость</h2>
+                        <p class="profile-email" id="profileEmail">Войдите в аккаунт</p>
+                    </div>
+                    
+                    <div class="profile-form" id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">ФИО</label>
+                            <input type="text" class="form-input" id="profileFullName" placeholder="Иванов Иван Иванович" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="profileEmailInput" placeholder="ваш@email.com" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Пароль</label>
+                            <input type="password" class="form-input" id="profilePassword" placeholder="••••••••" disabled>
+                        </div>
+                        <button class="save-btn" id="saveProfileBtn" disabled>Сохранить изменения</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Таб-бар -->
+        <div class="tab-bar">
+            <button class="tab-item active" data-page="home">
+                <i class="fas fa-map"></i>
+                <span class="tab-label">Главная</span>
             </button>
-            <button class="map-btn btn-save" onclick="saveRoute()">
-                <i class="fas fa-save"></i> Сохранить маршрут
+            <button class="tab-item" data-page="routes">
+                <i class="fas fa-route"></i>
+                <span class="tab-label">Маршруты</span>
             </button>
-            <button class="map-btn btn-list" onclick="showRouteList()">
-                <i class="fas fa-list"></i> Мои маршруты
+            <button class="tab-item" data-page="groups">
+                <i class="fas fa-users"></i>
+                <span class="tab-label">Группы</span>
             </button>
-            <button class="map-btn btn-back" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Назад
+            <button class="tab-item" data-page="profile">
+                <i class="fas fa-user"></i>
+                <span class="tab-label">Профиль</span>
             </button>
+        </div>
+
+        <!-- Оверлей авторизации -->
+        <div id="authOverlay" class="auth-overlay hidden">
+            <div class="auth-modal">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-form="login">Вход</button>
+                    <button class="auth-tab" data-form="register">Регистрация</button>
+                </div>
+                
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" placeholder="ваш@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Введите пароль" required>
+                    </div>
+                    <button type="submit" class="save-btn">Войти</button>
+                </form>
+                
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label class="form-label">ФИО</label>
+                        <input type="text" class="form-input" id="registerName" placeholder="Иванов Иван Иванович" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" placeholder="ваш@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <input type="password" class="form-input" id="registerPassword" placeholder="Придумайте пароль" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Подтвердите пароль</label>
+                        <input type="password" class="form-input" id="registerConfirm" placeholder="Повторите пароль" required>
+                    </div>
+                    <button type="submit" class="save-btn">Зарегистрироваться</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
     <script>
         // ==================== КОНФИГУРАЦИЯ SUPABASE ====================
-        // ⚠️ ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ С КОНСОЛИ SUPABASE!
         const supabaseUrl = 'https://jlykbogtjybqysjyjgjh.supabase.co';
         const supabaseKey = 'sb_publishable_-4KXIY05Dsd95F1RirHv3g_RiNBrdGo';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-        // Глобальные переменные для карты
+        
+        // Глобальные переменные
         let currentMap = null;
-        let routePoints = [];
-        let routeMarkers = [];
-        let routeLine = null;
+        let currentUser = null;
+        let routesData = [];
 
-        // ==================== ПЕРЕКЛЮЧЕНИЕ ФОРМ ====================
-        document.getElementById('to-register').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('login-form').classList.remove('active');
-            document.getElementById('register-form').classList.add('active');
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            setupEventListeners();
+            checkAuth();
+            loadRoutes();
         });
 
-        document.getElementById('to-login').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('register-form').classList.remove('active');
-            document.getElementById('login-form').classList.add('active');
-        });
-
-        // ==================== РЕГИСТРАЦИЯ С SUPABASE ====================
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const confirm = document.getElementById('reg-confirm').value;
-
-            if (!name || !email || !password || !confirm) {
-                alert('Заполните все поля!');
-                return;
-            }
-
-            if (password !== confirm) {
-                alert('Пароли не совпадают!');
-                return;
-            }
-
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: name
-                        }
-                    }
-                });
-
-                if (error) throw error;
-
-                alert(`Регистрация успешна! Добро пожаловать, ${name}! Проверьте почту для подтверждения.`);
-                console.log('Пользователь зарегистрирован:', data.user);
-                showMap();
-
-            } catch (error) {
-                alert('Ошибка регистрации: ' + error.message);
-                console.error('Ошибка регистрации:', error);
-            }
-        });
-
-        // ==================== ВХОД С SUPABASE ====================
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            if (!email || !password) {
-                alert('Заполните все поля!');
-                return;
-            }
-
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-
-                if (error) throw error;
-
-                alert('Вход выполнен успешно! Добро пожаловать!');
-                console.log('Пользователь вошёл:', data.user);
-                showMap();
-
-            } catch (error) {
-                alert('Ошибка входа: ' + error.message);
-                console.error('Ошибка входа:', error);
-            }
-        });
-
-        // ==================== ИНИЦИАЛИЗАЦИЯ КАРТЫ ====================
-        function showMap() {
-            try {
-                document.getElementById('start-container').style.display = 'none';
-                const mapContainer = document.getElementById('map-container');
-                mapContainer.style.display = 'block';
-
-                // Создаем карту (центр - Москва, масштаб 5)
-                currentMap = L.map('map').setView([55.7558, 37.6176], 5);
-
-                // Добавляем OpenStreetMap слой
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap',
-                    maxZoom: 19
-                }).addTo(currentMap);
-
-                // Добавляем полноэкранный режим
-                currentMap.addControl(new L.Control.Fullscreen());
-
-                // Обработчик клика по карте
-                currentMap.on('click', function(e) {
-                    addMarkerAt(e.latlng);
-                });
-
-                // Сбрасываем старые точки
-                routePoints = [];
-                routeMarkers = [];
-                routeLine = null;
-
-                console.log("Карта OpenStreetMap загружена");
-
-            } catch (error) {
-                console.error("Ошибка карты:", error);
-                alert("Ошибка загрузки карты");
-            }
+        function initApp() {
+            // Инициализация карты
+            initMap();
+            
+            // Заполнение данными для демо
+            populateDemoData();
         }
 
-        // ==================== РАБОТА С МАРШРУТАМИ ====================
-        function addMarkerAt(latlng) {
+        // ==================== КАРТА ====================
+        function initMap() {
+            if (typeof L === 'undefined') {
+                console.error('Leaflet не загружен');
+                return;
+            }
+            
+            currentMap = L.map('map').setView([55.7558, 37.6176], 4);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(currentMap);
+            
+            // Для мобильных
+            currentMap.touchZoom.enable();
+            currentMap.doubleClickZoom.enable();
+        }
+
+        function addMarkerAtCenter() {
             if (!currentMap) return;
-
-            const marker = L.marker(latlng).addTo(currentMap)
-                .bindPopup(`Точка ${routePoints.length + 1}<br>Широта: ${latlng.lat.toFixed(4)}<br>Долгота: ${latlng.lng.toFixed(4)}`)
+            
+            const center = currentMap.getCenter();
+            L.marker(center).addTo(currentMap)
+                .bindPopup(`Точка маршрута<br>${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`)
                 .openPopup();
+        }
 
-            routePoints.push({ lat: latlng.lat, lng: latlng.lng });
-            routeMarkers.push(marker);
+        function centerOnUser() {
+            if (!currentMap) return;
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latlng = [position.coords.latitude, position.coords.longitude];
+                    currentMap.setView(latlng, 13);
+                    
+                    L.marker(latlng).addTo(currentMap)
+                        .bindPopup('Вы здесь')
+                        .openPopup();
+                });
+            } else {
+                alert('Геолокация не поддерживается');
+            }
+        }
 
-            // Рисуем линию между точками
-            if (routePoints.length > 1) {
-                if (routeLine) {
-                    currentMap.removeLayer(routeLine);
+        // ==================== МАРШРУТЫ ====================
+        function loadRoutes() {
+            routesData = [
+                {
+                    id: 1,
+                    title: 'Гастрономический тур по Питеру',
+                    type: 'гастрономический',
+                    image: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                    duration: '1 ч',
+                    rating: '6',
+                    difficulty: 'Средняя',
+                    description: 'Этот маршрут познакомит вас с самыми интересными местами города. Вы увидите архитектурные шедевры, попробуете местную кухню и почувствуете атмосферу города.',
+                    points: [
+                        'Отправная точка - Главная площадь',
+                        'Исторический музей',
+                        'Смотровая площадка',
+                        'Местное кафе с аутентичной кухней',
+                        'Парк для отдыха'
+                    ]
+                },
+                {
+                    id: 2,
+                    title: 'Архитектурные шедевры Москвы',
+                    type: 'архитектурный',
+                    image: 'https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                    duration: '2 ч',
+                    rating: '8',
+                    difficulty: 'Легкая',
+                    description: 'Исследуйте архитектурное наследие столицы от древних соборов до современных небоскребов.',
+                    points: [
+                        'Красная площадь',
+                        'Храм Василия Блаженного',
+                        'Московский Кремль',
+                        'Москва-Сити',
+                        'Парк Зарядье'
+                    ]
+                },
+                {
+                    id: 3,
+                    title: 'Исторический маршрут по Казани',
+                    type: 'исторический',
+                    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                    duration: '3 ч',
+                    rating: '9',
+                    difficulty: 'Средняя',
+                    description: 'Погрузитесь в богатую историю Татарстана, где смешались восточная и европейская культуры.',
+                    points: [
+                        'Казанский Кремль',
+                        'Мечеть Кул-Шариф',
+                        'Баумана улица',
+                        'Старо-Татарская слобода',
+                        'Национальный музей'
+                    ]
+                },
+                {
+                    id: 4,
+                    title: 'Романтическая прогулка по Сочи',
+                    type: 'настроение',
+                    image: 'https://images.unsplash.com/photo-1591369824127-f6d0d8c4161d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                    duration: '1.5 ч',
+                    rating: '7',
+                    difficulty: 'Легкая',
+                    description: 'Идеальный маршрут для романтической прогулки вдоль моря и по живописным паркам.',
+                    points: [
+                        'Морской порт',
+                        'Сочинский дендрарий',
+                        'Ривьера парк',
+                        'Зимний театр',
+                        'Набережная'
+                    ]
                 }
-                routeLine = L.polyline(routePoints.map(p => [p.lat, p.lng]), {
-                    color: '#1a2980',
-                    weight: 3
-                }).addTo(currentMap);
-            }
+            ];
+            
+            renderRoutes();
         }
 
-        function addRoutePoint() {
-            if (currentMap) {
-                const center = currentMap.getCenter();
-                addMarkerAt(center);
-            }
+        function renderRoutes() {
+            const routesGrid = document.getElementById('routesGrid');
+            routesGrid.innerHTML = '';
+            
+            routesData.forEach(route => {
+                const routeCard = document.createElement('div');
+                routeCard.className = 'route-card';
+                routeCard.innerHTML = `
+                    <img src="${route.image}" alt="${route.title}" class="route-image">
+                    <div class="route-info">
+                        <div class="route-tag">${route.type}</div>
+                        <h3 class="route-title">${route.title}</h3>
+                        <div class="route-meta">
+                            <span class="route-meta-item">
+                                <i class="far fa-clock"></i> ${route.duration}
+                            </span>
+                            <span class="route-meta-item">
+                                <i class="fas fa-star"></i> ${route.rating}/10
+                            </span>
+                            <span class="route-meta-item">
+                                <i class="fas fa-chart-line"></i> ${route.difficulty}
+                            </span>
+                        </div>
+                    </div>
+                `;
+                
+                routeCard.addEventListener('click', () => showRouteDetail(route.id));
+                routesGrid.appendChild(routeCard);
+            });
         }
 
-        async function saveRoute() {
-            if (routePoints.length === 0) {
-                alert("Добавьте точки на карту!");
+        function showRouteDetail(routeId) {
+            const route = routesData.find(r => r.id === routeId);
+            if (!route) return;
+            
+            const detailPage = document.getElementById('route-detail-page');
+            detailPage.innerHTML = `
+                <div class="route-detail-header">
+                    <img src="${route.image}" alt="${route.title}" class="route-detail-image">
+                    <button class="back-btn" onclick="showPage('routes')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+                <div class="route-detail-content">
+                    <div class="route-tag">${route.type}</div>
+                    <h1 class="route-detail-title">${route.title}</h1>
+                    
+                    <div class="route-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">${route.duration}</span>
+                            <span class="stat-label">Длительность</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">${route.rating}/10</span>
+                            <span class="stat-label">Рейтинг</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">${route.difficulty}</span>
+                            <span class="stat-label">Сложность</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="section-subtitle">Описание</h3>
+                    <p class="route-description">${route.description}</p>
+                    
+                    <h3 class="section-subtitle">Точки маршрута</h3>
+                    <ul class="route-points">
+                        ${route.points.map((point, index) => `
+                            <li class="route-point">
+                                <div class="point-number">${index + 1}</div>
+                                <div class="point-text">${point}</div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn btn-find" onclick="findCompany()">
+                            <i class="fas fa-users"></i> Найти компанию
+                        </button>
+                        <button class="action-btn btn-start" onclick="startRoute(${route.id})">
+                            <i class="fas fa-play"></i> Начать маршрут
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            showPage('route-detail');
+        }
+
+        function findCompany() {
+            alert('Поиск компании для совместного путешествия...\n(Функция в разработке)');
+        }
+
+        function startRoute(routeId) {
+            const route = routesData.find(r => r.id === routeId);
+            if (!route) return;
+            
+            alert(`Начинаем маршрут: "${route.title}"\nУдачи в путешествии!`);
+            showPage('home');
+            
+            // Можно добавить логику для отображения маршрута на карте
+        }
+
+        // ==================== ПРОФИЛЬ ====================
+        function updateProfile() {
+            if (!currentUser) {
+                document.getElementById('profileName').textContent = 'Гость';
+                document.getElementById('profileEmail').textContent = 'Войдите в аккаунт';
+                document.getElementById('profileForm').classList.add('hidden');
                 return;
             }
+            
+            document.getElementById('profileName').textContent = currentUser.user_metadata?.full_name || 'Пользователь';
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileFullName').value = currentUser.user_metadata?.full_name || '';
+            document.getElementById('profileEmailInput').value = currentUser.email;
+            document.getElementById('profileForm').classList.remove('hidden');
+        }
 
-            const routeName = prompt("Название маршрута:", `Маршрут ${new Date().toLocaleDateString()}`);
-            if (!routeName) return;
-
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) {
-                    alert("Войдите в аккаунт!");
-                    return;
-                }
-
-                const { data, error } = await supabase
-                    .from('routes')
-                    .insert([{
-                        user_id: user.id,
-                        name: routeName,
-                        points: routePoints,
-                        created_at: new Date()
-                    }])
-                    .select();
-
-                if (error) throw error;
-
-                alert(`Маршрут "${routeName}" сохранен!`);
-
-                // Очищаем карту
-                routePoints = [];
-                routeMarkers.forEach(m => currentMap.removeLayer(m));
-                routeMarkers = [];
-                if (routeLine) {
-                    currentMap.removeLayer(routeLine);
-                    routeLine = null;
-                }
-
-            } catch (error) {
-                alert("Ошибка: " + error.message);
+        // ==================== АВТОРИЗАЦИЯ ====================
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                currentUser = user;
+                updateProfile();
+            } else {
+                showAuthModal();
             }
         }
 
-        async function showRouteList() {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) {
-                    alert("Войдите в аккаунт!");
-                    return;
-                }
-
-                const { data: routes, error } = await supabase
-                    .from('routes')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) throw error;
-
-                if (!routes || routes.length === 0) {
-                    alert("Нет сохраненных маршрутов");
-                    return;
-                }
-
-                let list = "Ваши маршруты:\n\n";
-                routes.forEach((r, i) => {
-                    list += `${i+1}. ${r.name}\n   Точек: ${r.points.length}\n   Дата: ${new Date(r.created_at).toLocaleDateString()}\n\n`;
-                });
-
-                const choice = prompt(`${list}\nВведите номер маршрута для просмотра:`);
-                if (choice && routes[choice-1]) {
-                    showSavedRoute(routes[choice-1]);
-                }
-
-            } catch (error) {
-                alert("Ошибка загрузки: " + error.message);
-            }
+        function showAuthModal() {
+            document.getElementById('authOverlay').classList.remove('hidden');
         }
 
-        function showSavedRoute(route) {
-            // Очищаем текущий маршрут
-            routePoints = [];
-            routeMarkers.forEach(m => currentMap.removeLayer(m));
-            routeMarkers = [];
-            if (routeLine) {
-                currentMap.removeLayer(routeLine);
-                routeLine = null;
-            }
+        function hideAuthModal() {
+            document.getElementById('authOverlay').classList.add('hidden');
+        }
 
-            // Отображаем сохраненный маршрут
-            route.points.forEach(point => {
-                addMarkerAt(L.latLng(point.lat, point.lng));
+        // ==================== НАВИГАЦИЯ ====================
+        function showPage(pageName) {
+            // Скрыть все страницы
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
             });
-
-            // Центрируем карту
-            if (route.points.length > 0) {
-                currentMap.setView([route.points[0].lat, route.points[0].lng], 10);
+            
+            // Показать нужную страницу
+            document.getElementById(`${pageName}-page`).classList.add('active');
+            
+            // Обновить таб-бар
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.page === pageName) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Если переходим на главную, обновляем размер карты
+            if (pageName === 'home' && currentMap) {
+                setTimeout(() => {
+                    currentMap.invalidateSize();
+                }, 100);
             }
-
-            alert(`Маршрут "${route.name}" загружен!`);
         }
 
-        // ==================== ВОЗВРАТ НАЗАД ====================
-        function goBack() {
-            document.getElementById('map-container').style.display = 'none';
-            document.getElementById('start-container').style.display = 'flex';
-
-            if (currentMap) {
-                currentMap.remove();
-                currentMap = null;
-            }
+        // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+        function setupEventListeners() {
+            // Таб-бар
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    showPage(this.dataset.page);
+                });
+            });
+            
+            // Авторизация
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.form + 'Form').classList.add('active');
+                });
+            });
+            
+            // Вход
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                try {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+                    
+                    if (error) throw error;
+                    
+                    currentUser = data.user;
+                    updateProfile();
+                    hideAuthModal();
+                    alert('Добро пожаловать!');
+                    
+                } catch (error) {
+                    alert('Ошибка входа: ' + error.message);
+                }
+            });
+            
+            // Регистрация
+            document.getElementById('registerForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirm = document.getElementById('registerConfirm').value;
+                
+                if (password !== confirm) {
+                    alert('Пароли не совпадают');
+                    return;
+                }
+                
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email: email,
+                        password: password,
+                        options: {
+                            data: {
+                                full_name: name
+                            }
+                        }
+                    });
+                    
+                    if (error) throw error;
+                    
+                    alert('✅ Регистрация успешна! Проверьте почту для подтверждения.');
+                    hideAuthModal();
+                    
+                } catch (error) {
+                    alert('Ошибка регистрации: ' + error.message);
+                }
+            });
+            
+            // Сохранение профиля
+            document.getElementById('saveProfileBtn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const newName = document.getElementById('profileFullName').value;
+                
+                try {
+                    const { error } = await supabase.auth.updateUser({
+                        data: { full_name: newName }
+                    });
+                    
+                    if (error) throw error;
+                    
+                    currentUser.user_metadata.full_name = newName;
+                    updateProfile();
+                    alert('Профиль обновлен!');
+                    
+                } catch (error) {
+                    alert('Ошибка обновления: ' + error.message);
+                }
+            });
         }
 
-        // ==================== АВТОЗАПОЛНЕНИЕ ДЛЯ ТЕСТА ====================
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                document.getElementById('login-email').value = 'test@example.com';
-                document.getElementById('login-password').value = 'password123';
-            }, 500);
-        });
+        // ==================== ДЕМО ДАННЫЕ ====================
+        function populateDemoData() {
+            // Автозаполнение формы входа
+            setTimeout(() => {
+                document.getElementById('loginEmail').value = 'test@example.com';
+                document.getElementById('loginPassword').value = 'password123';
+            }, 1000);
+        }
     </script>
 </body>
 </html>
